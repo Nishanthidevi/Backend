@@ -1,6 +1,6 @@
 const service = require("../services/userRegister.services");
 
-const getUsers = function(req,res) {
+const getUsers = function (req,res) {
     service.getUsers(req).then(function (users) {
         res.status(200).send(users);
     }).catch(function(e) {
@@ -20,6 +20,7 @@ const  saveUser = function(req, res) {
     service.saveUser(req).then(function(user) {
         res.status(201).send(user);
     }).catch(function(e) {
+        console.log("erorrrrrr---->", e)
         res.status(500).send("Internal Server Error");
     })
 }

@@ -8,4 +8,4 @@ const ActiveBooksSchema = mongoose.Schema({
     }]
 })
 
-module.exports = mongoose.model('ActiveBooks', ActiveBooksSchema);
+module.exports = mongoose.model('ActiveBooks', ActiveBooksSchema,'ActiveBooks');
