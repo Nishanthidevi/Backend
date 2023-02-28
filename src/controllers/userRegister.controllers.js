@@ -18,7 +18,7 @@ const getUserById = function(req, res) {
 
 const  saveUser = function(req, res) {
     service.saveUser(req).then(function(user) {
-        res.status(201).send("Users saved successfully");
+        res.status(201).send(user);
     }).catch(function(e) {
         res.status(500).send("Internal Server Error");
     })
