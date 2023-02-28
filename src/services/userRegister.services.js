@@ -2,17 +2,52 @@ const Users = require('../models/userRegister.model');
 const _ = require("lodash");
 const { filter } = require('lodash');
 
-const getUsers = function (req) {
+exports.getUsers = async (req) => {
     try {
-        return Users.find(req.query);
+        return await Users.find(req.query);
+    } catch (e) {
+        return e;
+    }
+};
+
+exports.getUserById = async (req) => {
+    try {
+        return await Users.findById(req.params.id);
+    } catch (e) {
+        return e;
+    }
+};
+
+exports.saveUser = async (req) => {
+    try {
+        var user = await new Users({
+            user_id: req.body.user_id,
+            books: {
+                book_id: req.body.book_id,
+                bookMark: [{ data: req.body.bookMark }],
+                notes: [{ data: req.body.notes }]
+            }
+        });
+        return user.save();
     } catch (e) {
         return e;
     }
 }
 
-const getUserById = function (req) {
+exports.updateUser = async (req, user) => {
     try {
-        return Users.findById(req.params.id);
+        let userDetails = await Users.find({});
+        // console.log("userDatails", userDetails)
+        let updatedUser = await Users.findByIdAndUpdateOne(req.params.id, {user_id: req.body},{ newBookMark: [{ data: req.body.data }] },
+            { newNotes: [{ data: req.body.data }] },
+            {
+                $push:
+                {
+                    bookMark: newBookMark,
+                    notes: newNotes
+                }
+            }
+        );
     } catch (e) {
         return e;
     }
@@ -63,26 +98,10 @@ const saveUser = async function (req) {
     }
 }
 
-const updateUser = function (req) {
-    try {
-        return Users.findByIdAndUpdate(req.params.id, req.body);
-    } catch (e) {
-        return e;
-    }
-}
-
-const deleteUser = function (req) {
-    try {
-        return Users.findByIdAndDelete(req.params.id)
-    } catch (e) {
-        return e;
-    }
-}
-
-module.exports = {
-    getUsers,
-    getUserById,
-    saveUser,
-    updateUser,
-    deleteUser
-}
+// exports.activeBooks = async (req) => {
+//     try {
+//         return await ActiveBooks.findByIdAndDelete(req.body)
+//     } catch (e) {
+//         return e;
+//     }
+// }

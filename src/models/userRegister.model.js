@@ -7,8 +7,12 @@ const UserSchema = mongoose.Schema({
     },
     books: [{
         book_id: String,
-        bookMark: [],
-        notes: []
+        bookMark: [{
+            data: Object
+        }],
+        notes: [{
+            data: Object
+        }]
     }]
 });
 
