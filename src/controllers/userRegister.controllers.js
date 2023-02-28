@@ -26,8 +26,8 @@ const  saveUser = function(req, res) {
     })
 }
 
-const updateUser = function(req, res) {
-    service.updateUser(req).then(function(user) {
+const updateAcitveBookUser = function(req, res) {
+    service.updateAcitveBookUser(req).then(function(user) {
         res.status(201).send("User updated Successfully");
     }).catch(function(e) {
         res.status(500).send("Internal Server Error");
@@ -46,6 +46,6 @@ module.exports = {
     getUsers,
     getUserById,
     saveUser,
-    updateUser,
+    updateAcitveBookUser,
     deleteUser
 }
