@@ -5,7 +5,7 @@ const router = express.Router();
 router.get('/:id', controller.getUserById);
 router.get('/', controller.getUsers);
 router.post('/saveUser', controller.saveUser);
-router.post('/updateAcitveBookUser', controller.updateAcitveBookUser);
+router.post('/updateActiveBookUser', controller.updateActiveBookUser);
 router.delete('/:id', controller.deleteUser);
 
 module.exports = router;

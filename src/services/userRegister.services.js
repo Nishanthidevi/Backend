@@ -64,7 +64,7 @@ exports.saveUser = async (req) => {
    }
 }
 
-exports.updateAcitveBookUser = async (req, res) => {
+exports.updateActiveBookUser = async (req, res) => {
     try {
         const book = await ActiveBooks.findOne({"book_id":req.book_id});
         if(_.isEmpty(book) || _.isEmpty(book.activeUsers)){
