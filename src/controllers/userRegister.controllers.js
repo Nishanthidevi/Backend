@@ -9,7 +9,7 @@ const getUsers = (req, res) => {
 }
 
 const getUserById = (req, res) => {
-    service.getUserById(req.body).then((user) => {
+    service.getUserById(req).then((user) => {
         res.status(200).send(user);
     }).catch((e) => {
         res.status(500).send("Internal Server Error");
