@@ -4,7 +4,7 @@ const ActiveBooksSchema = mongoose.Schema({
     book_id: String,
     activeUsers: [{
         user_id: String,
-        timestamp: true
+        timestamp: Date
     }]
 })
 

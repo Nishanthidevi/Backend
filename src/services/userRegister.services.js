@@ -1,4 +1,5 @@
 const Users = require('../models/userRegister.model');
+const ActiveBooks = require('../models/activeBooks.model');
 const _ = require("lodash");
 const { filter } = require('lodash');
 
@@ -63,24 +64,63 @@ exports.saveUser = async (req) => {
    }
 }
 
-exports.updateAcitveBookUser = async (req, user) => {
+exports.updateAcitveBookUser = async (req, res) => {
     try {
-        let userDetails = await Users.find({});
-        // console.log("userDatails", userDetails)
-        let updatedUser = await Users.findByIdAndUpdateOne(req.params.id, {user_id: req.body},{ newBookMark: [{ data: req.body.data }] },
-            { newNotes: [{ data: req.body.data }] },
-            {
-                $push:
-                {
-                    bookMark: newBookMark,
-                    notes: newNotes
+        const book = await ActiveBooks.findOne({"book_id":req.book_id});
+        if(_.isEmpty(book) || _.isEmpty(book.activeUsers)){
+            const filter = { book_id: req.book_id };
+            const update = {
+                activeUsers: [
+                    {
+                        user_id: req.user_id,
+                        timestamp: new Date()
+                    }
+                ]
+            }
+            let doc = await ActiveBooks.findOneAndUpdate(filter, update, {
+                new: true,
+                upsert: true // Make this update into an upsert
+              });  
+            return doc;
+        }
+        const  activeUsers = book.activeUsers;
+
+        const filteredActiveUsers = activeUsers.filter((obj) =>  { 
+            return this.diff_minutes(obj.timestamp, new Date())<=10;
+        });
+
+        if(filteredActiveUsers.length<10){
+            for (var i =0; i<filteredActiveUsers.length; i++){
+                if (filteredActiveUsers[i].user_id == req.user_id) {
+                    filteredActiveUsers[i].timestamp = new Date();
+                    break;
+                } else {
+                    filteredActiveUsers.push({user_id: req.user_id, timestamp: new Date()});
+                    break;
                 }
             }
-        );
+        } else {
+            throw { message: "Active users limit exceeded", status: 400 };
+        }
+        return await ActiveBooks.updateOne({"book_id":req.book_id}, {$set: { activeUsers: filteredActiveUsers}});
+
     } catch (e) {
-        return e;
+        throw e;
     }
 }
+
+exports.diff_minutes = (dt2, dt1) => {
+    var diff =(dt2. getTime() - dt1. getTime()) / 1000;
+    diff /= 60;
+    return  Math. abs(Math. round(diff));
+}
+
+// function diff_minutes(dt2, dt1){
+// ​
+//     var diff =(dt2. getTime() - dt1. getTime()) / 1000;
+//     diff /= 60;
+//     return Math. abs(Math. round(diff));
+// }
 
 
 // exports.activeBooks = async (req) => {

@@ -27,10 +27,10 @@ const  saveUser = function(req, res) {
 }
 
 const updateAcitveBookUser = function(req, res) {
-    service.updateAcitveBookUser(req).then(function(user) {
+    service.updateAcitveBookUser(req.body,res).then(function(user) {
         res.status(201).send("User updated Successfully");
     }).catch(function(e) {
-        res.status(500).send("Internal Server Error");
+        res.status(e.status || 500).send(e.message || "Internal Server Error");
     })
 }
 
