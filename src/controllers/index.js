@@ -2,6 +2,7 @@ const controller = require('../controllers/userRegister.controllers');
 const express = require('express');
 const router = express.Router();
 
+router.get('/bookmarks', controller.getBookmarks);
 router.get('/:id', controller.getUserById);
 router.get('/', controller.getUsers);
 router.post('/saveUser', controller.saveUser);

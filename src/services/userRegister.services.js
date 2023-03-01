@@ -116,6 +116,15 @@ exports.updateActiveBookUser = async (req, res) => {
     }
 }
 
+exports.getBookmarks = async (req) => {
+    try {
+        return await Users.find({ user_id: req.query.user, "books.book_id": req.query.book },
+            { "books.$": 1, _id: 0 });
+    } catch (e) {
+        return e;
+    }
+};
+
 exports.diff_minutes = (dt2, dt1) => {
     var diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60;

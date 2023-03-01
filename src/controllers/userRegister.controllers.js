@@ -41,9 +41,17 @@ const deleteUser = (req, res) => {
         res.status(500).send("Internal Server Error");
     })
 }
+const getBookmarks = (req, res) => {
+    service.getBookmarks(req).then((user) => {
+        res.status(200).send(user)
+    }).catch((e) => {
+        res.status(500).send("Internal Server Error");
+    })
+}
 
 module.exports = {
     getUsers,
+    getBookmarks,
     getUserById,
     saveUser,
     updateActiveBookUser,
