@@ -84,22 +84,28 @@ exports.updateAcitveBookUser = async (req, res) => {
             return doc;
         }
         const  activeUsers = book.activeUsers;
-
         const filteredActiveUsers = activeUsers.filter((obj) =>  { 
             return this.diff_minutes(obj.timestamp, new Date())<=10;
         });
-
+        const existingUser = filteredActiveUsers.find((obj) => obj.user_id === req.user_id);
         if(filteredActiveUsers.length<10){
             for (var i =0; i<filteredActiveUsers.length; i++){
                 if (filteredActiveUsers[i].user_id == req.user_id) {
                     filteredActiveUsers[i].timestamp = new Date();
                     break;
-                } else {
+                } else if(!existingUser && filteredActiveUsers.length<10){
                     filteredActiveUsers.push({user_id: req.user_id, timestamp: new Date()});
                     break;
                 }
             }
-        } else {
+        } else if(existingUser){
+            for (var i =0; i<filteredActiveUsers.length; i++){
+                if (filteredActiveUsers[i].user_id == req.user_id) {
+                    filteredActiveUsers[i].timestamp = new Date();
+                    break;
+                }
+            }
+        }else {
             throw { message: "Active users limit exceeded", status: 400 };
         }
         return await ActiveBooks.updateOne({"book_id":req.book_id}, {$set: { activeUsers: filteredActiveUsers}});
