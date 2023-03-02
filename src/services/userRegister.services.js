@@ -2,6 +2,9 @@ const Users = require('../models/userRegister.model');
 const ActiveBooks = require('../models/activeBooks.model');
 const _ = require("lodash");
 const { filter } = require('lodash');
+// const {openai,summarize} = require('openai');
+const { Configuration, OpenAIApi } = require("openai");
+// const { summarize } = require('@openai/summarize');
 
 exports.getUsers = async (req) => {
     try {
@@ -149,18 +152,77 @@ exports.diff_minutes = (dt2, dt1) => {
 //     }
 // }
 
-exports.updateSummarizeText = async (req, users) => {
+exports.getUpdatatedBookmarks = async (req, res) => {
     try {
-        await Users.updateMany(
-            { $match: { user_id: true } },
-            { $addFields: { text: req.body }}, 
-            { $set: {summary: $text}}, users);
-        if(text != null) {
-             summary = text.summarize
-
+        if (bookMarks == req.body.bookMarks && notes == null) {
+            const filter = { user_id: req.user_id };
+            const update = { $push: { books: { $each: [{ bookMark: req.body.bookMark }, { notes: req.body.notes }] } } };
+            const updatedBookMarks = Users.findOneAndUpdate(filter, update, {
+                new: true,
+                upsert: true
+            }
+            );
+            return updatedBookMarks;
+        } else {
+            const UpdatatedNotes = Users.findOneAndUpdate(filter, update,
+                {
+                    new: true,
+                    upsert: true,
+                }
+            );
+            return UpdatatedNotes;
         }
     } catch (e) {
-
+        return e;
     }
+}
 
+exports.getUpdatatedNotes = async (req, res) => {
+    try {
+        if (notes == req.body.notes && bookMarks == null) {
+            // Update the document with new values for the oldField array
+            const filter = { user_id: req.user_id };
+            const update = { $push: { books: { $each: [{ bookMark: req.body.bookMark }, { notes: req.body.notes }] } } };
+            const UpdatatedNotes = Users.findOneAndUpdate(filter, update,
+                {
+                    new: true,
+                    upsert: true,
+                }
+            );
+            return UpdatatedNotes;
+        } else {
+            const updatedBookMarks = Users.findOneAndUpdate(filter, update, {
+                new: true,
+                upsert: true
+            }
+            );
+            return updatedBookMarks;
+        }
+    } catch (e) {
+        return e;
+    }
+}
+
+exports.updateSummarizeText = async (req, users) => {
+    try {
+        const configuration = new Configuration({
+            apiKey: "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",
+        });
+        const openai = new OpenAIApi(configuration);
+        let text = req.body.text;
+        const response = await openai.createCompletion({
+            model: "text-ada-001",
+            prompt: text,
+            temperature: 0.7,
+            max_tokens: 60,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 1,
+        })
+        // console.log(response.data.choices[0].text)
+        // res.send(response.data.choices[0].text);
+        return text;
+    } catch (e) {
+        return e
+    }
 }

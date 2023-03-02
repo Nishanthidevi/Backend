@@ -49,11 +49,39 @@ const getBookmarks = (req, res) => {
     })
 }
 
+const getUpdatatedBookmarks = function (req, res) {
+    service.getUpdatatedBookmarks(req).then(function (updatedData) {
+        res.status(200).send(updatedData);
+    }).catch(function (e) {
+        console.log("errorrrrrrrrrr", e)
+        res.status(500).send("Internal Server Error");
+    })
+}
+
+const getUpdatatedNotes = function (req, res) {
+    service.getUpdatatedNotes(req).then(function (updatedData) {
+        res.status(200).send(updatedData);
+    }).catch(function (e) {
+        res.status(500).send("Internal Server Error");
+    })
+}
+
+const updateSummarizeText = function (req, res) {
+    service.updateSummarizeText(req).then(function (data) {
+        res.status(200).send(data);
+    }).catch(function (e) {
+        res.status(500).send("Internal Server Error");
+    })
+}
+
 module.exports = {
     getUsers,
     getBookmarks,
     getUserById,
     saveUser,
     updateActiveBookUser,
-    deleteUser
+    deleteUser,
+    getUpdatatedBookmarks,
+    getUpdatatedNotes,
+    updateSummarizeText
 }
