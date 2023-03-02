@@ -118,7 +118,7 @@ exports.updateActiveBookUser = async (req, res) => {
 
 exports.getBookmarks = async (req) => {
     try {
-        return await Users.find({ user_id: req.query.user, "books.book_id": req.query.book },
+        return await Users.find({ user_id: req.query.user_id, "books.book_id": req.query.book_id },
             { "books.$": 1, _id: 0 });
     } catch (e) {
         return e;
