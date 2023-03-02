@@ -17,7 +17,8 @@
     "express-rate-limit-ioredis-store": "^1.0.4",
     "lodash": "^4.17.21",
     "mongoose": "^6.10.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "nodejs-text-summarizer": "^2.0.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

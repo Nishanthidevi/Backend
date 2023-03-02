@@ -86,15 +86,15 @@ exports.updateActiveBookUser = async (req, res) => {
         }
         const activeUsers = book.activeUsers;
         const filteredActiveUsers = activeUsers.filter((obj) => {
-            return this.diff_minutes(obj.timestamp, new Date()) <= 10;
+            return this.diff_minutes(obj.timestamp, new Date()) <= 3;
         });
         const existingUser = filteredActiveUsers.find((obj) => obj.user_id === req.user_id);
-        if (filteredActiveUsers.length < 10) {
+        if (filteredActiveUsers.length < 3) {
             for (var i = 0; i < filteredActiveUsers.length; i++) {
                 if (filteredActiveUsers[i].user_id == req.user_id) {
                     filteredActiveUsers[i].timestamp = new Date();
                     break;
-                } else if (!existingUser && filteredActiveUsers.length < 10) {
+                } else if (!existingUser && filteredActiveUsers.length < 3) {
                     filteredActiveUsers.push({ user_id: req.user_id, timestamp: new Date() });
                     break;
                 }
@@ -131,6 +131,8 @@ exports.diff_minutes = (dt2, dt1) => {
     return Math.abs(Math.round(diff));
 }
 
+
+
 // function diff_minutes(dt2, dt1){
 //
 //     var diff =(dt2. getTime() - dt1. getTime()) / 1000;
@@ -146,3 +148,19 @@ exports.diff_minutes = (dt2, dt1) => {
 //         return e;
 //     }
 // }
+
+exports.updateSummarizeText = async (req, users) => {
+    try {
+        await Users.updateMany(
+            { $match: { user_id: true } },
+            { $addFields: { text: req.body }}, 
+            { $set: {summary: $text}}, users);
+        if(text != null) {
+             summary = text.summarize
+
+        }
+    } catch (e) {
+
+    }
+
+}
