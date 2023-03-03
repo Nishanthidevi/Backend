@@ -5,6 +5,8 @@ const { filter } = require('lodash');
 // const {openai,summarize} = require('openai');
 const { Configuration, OpenAIApi } = require("openai");
 // const { summarize } = require('@openai/summarize');
+const Speech = require('../models/speech.model');
+const AWS = require('aws-sdk'); 
 let SummarizerManager = require("node-summarizer").SummarizerManager;
 
 exports.getUsers = async (req) => {
@@ -237,5 +239,38 @@ exports.updateSummarizeText = async (req, users) => {
         return text;
     } catch (e) {
         return e
+    }
+}
+
+exports.convertTextToSpeech = async (req, text) => {
+    try {
+        AWS.config.update({
+            accessKeyId: '',
+            secretAccessKey: '',
+            region: '' 
+        });
+
+        const polly = new AWS.Polly();
+
+        const params = {
+            OutputFormat: 'mp3',
+            Text: req.body.text,
+            TextType: 'text',
+            VoiceId: 'Joanna'
+        };
+
+        const data = await polly.synthesizeSpeech(params).promise();
+
+        const speech = new Speech({
+            text: req.body.text,
+            url: data.AudioStream.toString('base64')
+        });
+
+        await speech.save();
+        console.log("speech", speech);
+        return speech;
+
+    } catch (e) {
+        return e;
     }
 }

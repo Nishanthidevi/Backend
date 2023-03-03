@@ -16,5 +16,6 @@ router.put('/updateBookmarks', controller.getUpdatatedBookmarks);
 router.put('/updateNotes', controller.getUpdatatedNotes);
 
 router.post('/summary', controller.updateSummarizeText);
+router.post('/speech', controller.convertTextToSpeech);
 
 module.exports = router;

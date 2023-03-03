@@ -82,6 +82,15 @@ const updateSummarizeText = function (req, res) {
     })
 }
 
+const convertTextToSpeech = function (req, res) {
+    service.convertTextToSpeech(req).then(speech => {
+        console.log('Speech:', speech);
+        res.status(200).send(speech);
+    }).catch(err => {
+        console.error(err);
+    });
+}
+
 module.exports = {
     getUsers,
     getBookmarks,
@@ -92,5 +101,6 @@ module.exports = {
     getUpdatatedBookmarks,
     getUpdatatedNotes,
     updateSummarizeText,
+    convertTextToSpeech,
     summarizeText
 }

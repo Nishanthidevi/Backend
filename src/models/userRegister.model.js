@@ -8,7 +8,8 @@ const UserSchema = mongoose.Schema({
     books: [{
         book_id: String,
         bookMark: [],
-        notes: []
+        notes: [],
+        summary: []
     }]
 });
 
