@@ -34,6 +34,14 @@ const updateActiveBookUser = (req, res) => {
     })
 }
 
+const summarizeText = function(req, res) {
+    service.summarizeText(req.body, res).then(function(result) {
+        res.status(201).send({"summary": result});
+    }).catch(function(e) {
+        res.status(e.status || 500).send(e.message || "Internal Server Error");
+    })
+}
+
 const deleteUser = (req, res) => {
     service.deleteUser(req).then((user) => {
         res.status(200).send("User deleted Successfully");
@@ -83,5 +91,6 @@ module.exports = {
     deleteUser,
     getUpdatatedBookmarks,
     getUpdatatedNotes,
-    updateSummarizeText
+    updateSummarizeText,
+    summarizeText
 }

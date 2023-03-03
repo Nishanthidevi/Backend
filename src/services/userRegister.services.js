@@ -5,6 +5,7 @@ const { filter } = require('lodash');
 // const {openai,summarize} = require('openai');
 const { Configuration, OpenAIApi } = require("openai");
 // const { summarize } = require('@openai/summarize');
+let SummarizerManager = require("node-summarizer").SummarizerManager;
 
 exports.getUsers = async (req) => {
     try {
@@ -114,6 +115,18 @@ exports.updateActiveBookUser = async (req, res) => {
         }
         return await ActiveBooks.updateOne({ "book_id": req.book_id }, { $set: { activeUsers: filteredActiveUsers } });
 
+    } catch (e) {
+        throw e;
+    }
+}
+
+exports.summarizeText = async (req, res) => {
+    try {
+        var decodedText = decodeURIComponent(req.text);
+        let Summarizer = new SummarizerManager(decodedText,5); 
+        let summary = Summarizer.getSummaryByFrequency().summary;
+        var encodedSummary = encodeURIComponent(summary);
+        return encodedSummary;
     } catch (e) {
         throw e;
     }

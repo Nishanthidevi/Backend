@@ -8,6 +8,7 @@ router.delete('/:id', controller.deleteUser);
 
 router.post('/saveUser', controller.saveUser);
 router.post('/updateActiveBookUser', controller.updateActiveBookUser);
+router.post('/summarizeText', controller.summarizeText);
 
 router.get('/bookmarks', controller.getBookmarks);
 
