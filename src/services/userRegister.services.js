@@ -245,9 +245,9 @@ exports.updateSummarizeText = async (req, users) => {
 exports.convertTextToSpeech = async (req, text) => {
     try {
         AWS.config.update({
-            accessKeyId: '',
-            secretAccessKey: '',
-            region: '' 
+            accessKeyId: process.env.ACCESSKEYID,
+            secretAccessKey: process.env.SECRETACCESSKEY,
+            region: 'us-west-2' 
         });
 
         const polly = new AWS.Polly();
