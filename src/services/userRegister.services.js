@@ -33,8 +33,9 @@ exports.saveUser = async (req) => {
                 books: [
                     {
                         book_id: req.book_id,
-                        bookMark: [req.bookMark],
-                        notes: [req.notes]
+                        bookMark: !_.isEmpty(req.bookMark) ? [req.bookMark] : [],
+                        notes: !_.isEmpty(req.notes) ? [req.notes] : [],
+                        summary: !_.isEmpty(req.summary) ? [req.summary] : []
                     }
                 ]
             }
@@ -43,25 +44,41 @@ exports.saveUser = async (req) => {
         } else {
             const user = await Users.findOne({ "user_id": req.user_id, "books.book_id": req.book_id });
             if (_.isEmpty(user)) {
+                let updateQery = {
+                    book_id: req.book_id
+                }
+                if(!_.isEmpty(req.bookMark)){
+                    updateQery.bookMark = [req.bookMark]
+                }
+                if(!_.isEmpty(req.notes)){
+                    updateQery.notes = [req.notes]
+                }
+                if(!_.isEmpty(req.summary)){
+                    updateQery.summary = [req.summary]
+                }
                 return await Users.findOneAndUpdate({ user_id: req.user_id }, {
                     $push: {
-                        books: {
-                            book_id: req.book_id,
-                            bookMark: [req.bookMark],
-                            notes: [req.notes]
-                        }
+                        books: updateQery
                     }
-                })
+                }, {new: true})
             } else {
+                let updateQery = {};
                 const selectedBook = user.books.filter((obj) => obj.book_id === req.book_id)[0];
-                selectedBook.bookMark.push(req.bookMark);
-                selectedBook.notes.push(req.notes);
+                if(!_.isEmpty(req.bookMark)){
+                    selectedBook.bookMark.push(req.bookMark);
+                    updateQery["books.$.bookMark"] = selectedBook.bookMark;
+                }
+                if(!_.isEmpty(req.notes)){
+                    selectedBook.notes.push(req.notes);
+                    updateQery["books.$.notes"] = selectedBook.notes;
+                }
+                if(!_.isEmpty(req.summary)){
+                    selectedBook.summary.push(req.summary);
+                    updateQery["books.$.summary"] = selectedBook.summary;
+                }
                 return await Users.findOneAndUpdate({ "user_id": req.user_id, "books.book_id": req.book_id }, {
-                    $set: {
-                        "books.$.bookMark": selectedBook.bookMark,
-                        "books.$.notes": selectedBook.notes
-                    }
-                });
+                    $set: updateQery
+                }, {new: true});
             }
         }
     } catch (e) {
