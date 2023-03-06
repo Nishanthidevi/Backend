@@ -50,27 +50,27 @@ app.get('/route', async (req, res) => {
 // })
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/")
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname)
-  },
-})
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads/")
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + "-" + file.originalname)
+//   },
+// })
 
-const uploadStorage = multer({ storage: storage })
+// const uploadStorage = multer({ storage: storage })
 
-// Single file
-app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
-  console.log(req.file)
-  return res.send("Single file")
-})
-//Multiple files - but here uploaded files limited to 10
-app.post("/upload/multiple", uploadStorage.array("file", 10), (req, res) => {
-  console.log(req.files)
-  return res.send("Multiple files")
-})
+// // Single file
+// app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
+//   console.log(req.file)
+//   return res.send("Single file")
+// })
+// //Multiple files - but here uploaded files limited to 10
+// app.post("/upload/multiple", uploadStorage.array("file", 10), (req, res) => {
+//   console.log(req.files)
+//   return res.send("Multiple files")
+// })
 
 routes.apiRoutes(app);
 
