@@ -1,8 +1,10 @@
 require('./src/db/mongoose');
+require('dot-env');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const multer = require("multer")
+
 
 // organization: "org-CekAepa3UocMeResTy3O2FqA",
 
