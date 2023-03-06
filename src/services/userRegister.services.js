@@ -8,6 +8,8 @@ const { Configuration, OpenAIApi } = require("openai");
 const Speech = require('../models/speech.model');
 const AWS = require('aws-sdk'); 
 let SummarizerManager = require("node-summarizer").SummarizerManager;
+const gTTS = require('gtts');
+const googleTTS = require('google-tts-api'); // CommonJS
 
 exports.getUsers = async (req) => {
     try {
@@ -273,4 +275,15 @@ exports.convertTextToSpeech = async (req, text) => {
     } catch (e) {
         return e;
     }
+}
+
+exports.convertTextToSpeechV2 = async (req) => {
+    const results = googleTTS.getAllAudioUrls(req.text, {
+        lang: 'en',
+        slow: false,
+        host: 'https://translate.google.com',
+        splitPunct: ',.?',
+      });
+      console.log("results ",results)
+      return results;
 }

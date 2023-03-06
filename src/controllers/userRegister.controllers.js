@@ -91,6 +91,15 @@ const convertTextToSpeech = function (req, res) {
     });
 }
 
+const convertTextToSpeechV2 = function (req, res) {
+    service.convertTextToSpeechV2(req.body).then(speech => {
+        console.log('Speech:', speech);
+        res.status(200).send(speech);
+    }).catch(err => {
+        console.error(err);
+    });
+}
+
 module.exports = {
     getUsers,
     getBookmarks,
@@ -102,5 +111,6 @@ module.exports = {
     getUpdatatedNotes,
     updateSummarizeText,
     convertTextToSpeech,
-    summarizeText
+    summarizeText,
+    convertTextToSpeechV2
 }

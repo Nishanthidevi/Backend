@@ -17,5 +17,6 @@ router.put('/updateNotes', controller.getUpdatatedNotes);
 
 router.post('/summary', controller.updateSummarizeText);
 router.post('/speech', controller.convertTextToSpeech);
+router.post('/convertTextToSpeech', controller.convertTextToSpeechV2);
 
 module.exports = router;
