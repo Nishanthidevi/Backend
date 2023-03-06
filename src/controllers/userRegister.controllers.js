@@ -57,6 +57,23 @@ const getBookmarks = (req, res) => {
     })
 }
 
+const getSummary = (req, res) => {
+    service.getSummary(req).then((user) => {
+        res.status(200).send(user)
+    }).catch((e) => {
+        res.status(500).send("Internal Server Error");
+    })
+}
+
+const getNotes = (req, res) => {
+    console.log("=",req.query)
+    service.getNotes(req).then((user) => {
+        res.status(200).send(user)
+    }).catch((e) => {
+        res.status(500).send("Internal Server Error");
+    })
+}
+
 const getUpdatatedBookmarks = function (req, res) {
     service.getUpdatatedBookmarks(req).then(function (updatedData) {
         res.status(200).send(updatedData);
@@ -112,5 +129,7 @@ module.exports = {
     updateSummarizeText,
     convertTextToSpeech,
     summarizeText,
-    convertTextToSpeechV2
+    convertTextToSpeechV2,
+    getNotes,
+    getSummary
 }

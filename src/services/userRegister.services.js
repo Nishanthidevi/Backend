@@ -138,9 +138,36 @@ exports.summarizeText = async (req, res) => {
 
 exports.getBookmarks = async (req) => {
     try {
-        return await Users.find({ user_id: req.query.user_id, "books.book_id": req.query.book_id },
-            { "books.$": 1, _id: 0 });
+        let result = await Users.find({ user_id: req.query.user_id, "books.book_id": req.query.book_id },
+            { "books.bookMark.$": 1, _id: 0 });
+        result = JSON.parse(JSON.stringify(result))
+        return result[0].books[0].bookMark;
     } catch (e) {
+        console.log("ee ",e)
+        return e;
+    }
+};
+
+exports.getNotes = async (req) => {
+    try {
+        let result =  await Users.find({ user_id: req.query.user_id, "books.book_id": req.query.book_id },
+            { "books.notes.$": 1, _id: 0 });
+        result = JSON.parse(JSON.stringify(result))
+        return result[0].books[0].notes;
+    } catch (e) {
+        console.log("ee ",e)
+        return e;
+    }
+};
+
+exports.getSummary = async (req) => {
+    try {
+        let result =  await Users.find({ user_id: req.query.user_id, "books.book_id": req.query.book_id },
+            { "books.summary.$": 1, _id: 0 });
+        result = JSON.parse(JSON.stringify(result))
+        return result[0].books[0].summary;
+    } catch (e) {
+        console.log("ee ",e)
         return e;
     }
 };
