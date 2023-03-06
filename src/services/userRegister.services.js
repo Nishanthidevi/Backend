@@ -2,13 +2,10 @@ const Users = require('../models/userRegister.model');
 const ActiveBooks = require('../models/activeBooks.model');
 const _ = require("lodash");
 const { filter } = require('lodash');
-// const {openai,summarize} = require('openai');
 const { Configuration, OpenAIApi } = require("openai");
-// const { summarize } = require('@openai/summarize');
 const Speech = require('../models/speech.model');
 const AWS = require('aws-sdk'); 
 let SummarizerManager = require("node-summarizer").SummarizerManager;
-const gTTS = require('gtts');
 const googleTTS = require('google-tts-api'); // CommonJS
 
 exports.getUsers = async (req) => {
@@ -296,9 +293,7 @@ exports.convertTextToSpeech = async (req, text) => {
         });
 
         await speech.save();
-        console.log("speech", speech);
         return speech;
-
     } catch (e) {
         return e;
     }
@@ -311,6 +306,5 @@ exports.convertTextToSpeechV2 = async (req) => {
         host: 'https://translate.google.com',
         splitPunct: ',.?',
       });
-      console.log("results ",results)
       return results;
 }
