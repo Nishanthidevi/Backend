@@ -117,6 +117,15 @@ const convertTextToSpeechV2 = function (req, res) {
     });
 }
 
+const getPdfExtractedPages = function (req, res) {
+    service.getPdfExtractedPages().then(function (data) {
+        console.log("testing")
+        res.status(200).send(data);
+    }).catch(function (e) {
+        res.status(500).send("Internal Server Error");
+    })
+}
+
 module.exports = {
     getUsers,
     getBookmarks,
@@ -124,12 +133,13 @@ module.exports = {
     saveUser,
     updateActiveBookUser,
     deleteUser,
-    getUpdatatedBookmarks,
-    getUpdatatedNotes,
+    // getUpdatatedBookmarks,
+    // getUpdatatedNotes,
     updateSummarizeText,
     convertTextToSpeech,
     summarizeText,
     convertTextToSpeechV2,
     getNotes,
-    getSummary
+    getSummary,
+    getPdfExtractedPages
 }

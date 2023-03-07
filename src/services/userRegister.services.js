@@ -4,9 +4,10 @@ const _ = require("lodash");
 const { filter } = require('lodash');
 const { Configuration, OpenAIApi } = require("openai");
 const Speech = require('../models/speech.model');
-const AWS = require('aws-sdk'); 
+const AWS = require('aws-sdk');
 let SummarizerManager = require("node-summarizer").SummarizerManager;
 const googleTTS = require('google-tts-api'); // CommonJS
+const { GetObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 
 exports.getUsers = async (req) => {
     try {
@@ -141,7 +142,7 @@ exports.updateActiveBookUser = async (req, res) => {
 exports.summarizeText = async (req, res) => {
     try {
         var decodedText = decodeURIComponent(req.text);
-        let Summarizer = new SummarizerManager(decodedText,5); 
+        let Summarizer = new SummarizerManager(decodedText, 5);
         let summary = Summarizer.getSummaryByFrequency().summary;
         var encodedSummary = encodeURIComponent(summary);
         return encodedSummary;
@@ -288,9 +289,9 @@ exports.updateSummarizeText = async (req, users) => {
 exports.convertTextToSpeech = async (req, text) => {
     try {
         AWS.config.update({
-            accessKeyId: process.env.ACCESSKEYID,
-            secretAccessKey: process.env.SECRETACCESSKEY,
-            region: 'us-west-2' 
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            region: 'us-west-2'
         });
 
         const polly = new AWS.Polly();
@@ -324,4 +325,63 @@ exports.convertTextToSpeechV2 = async (req) => {
         splitPunct: ',.?',
       });
       return results;
+}
+
+exports.getPdfExtractedPages = async () => {
+
+        // const s3 = new AWS.S3({
+        //     region: 'us-west-2',
+        //     credentials: {
+        //         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        //         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+        //     },
+        //   });
+        //   const resp = await s3.getObject({
+        //     Bucket: "bookreader",
+        //     Key: "Moby_Dick-Herman_Melville.pdf",
+        //   });
+        //   console.info(await new Response(resp.Body, {}).text())
+
+        const s3 = new AWS.S3();
+
+        // AWS.config.update({
+        //     accessKeyId: "",
+        //     secretAccessKey: "",
+        //     region: 'us-west-2'
+        // });
+
+        const params = {
+            Bucket: "bookreader",
+            Key: "Moby_Dick-Herman_Melville.pdf"
+        };
+
+        s3.getObject(params,(err, data) => {
+        // s3.listObjects(params, (err, data) => {
+            if (err) {
+                console.error(err);
+            } else {
+                // const json = JSON.parse(data.Body.toString('utf-8'));
+                // // Insert the JSON data into MongoDB
+                console.log("data", data.Body.toString('utf-8'));
+                // console.log("data:", data);
+                // res.send(data);
+            }
+        });
+
+        // const client = new S3Client({region: 'us-west-2'});
+        
+        // const command = new GetObjectCommand({
+        //     Bucket: "bookreader",
+        //     Key: "hello-s3.txt"
+        // });
+
+        // try {
+        //     const response = await client.send(command);
+        //     console.log("response", response);
+        //     // The Body object also has 'transformToByteArray' and 'transformToWebStream' methods.
+        //     const str = await response.Body.transformToString();
+        //     console.log(str);
+        // } catch (err) {
+        //     console.error(err);
+        // }
 }
